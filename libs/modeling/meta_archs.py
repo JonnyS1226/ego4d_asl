@@ -254,7 +254,6 @@ class PtTransformer(nn.Module):
         # ============ dev# ============ dev# ============ dev# ============ dev
         self.t_c_alpha = train_cfg['t_c_alpha']
         self.al_loss_weight = train_cfg['al_loss_weight']
-        self.imp_loss_weight = train_cfg['imp_loss_weight']
         self.cont_loss_weight = train_cfg['cont_loss_weight']
         self.seg_loss_weight = train_cfg['seg_loss_weight']
         self.queue_size = train_cfg['queue_size']
@@ -471,7 +470,6 @@ class PtTransformer(nn.Module):
         out_cls_logits = [x.permute(0, 2, 1) for x in out_cls_logits]      
         # out_offset: F List[B, 2 (xC), T_i] -> F List[B, T_i, 2 (xC)]      
         out_offsets = [x.permute(0, 2, 1) for x in out_offsets]   
-        # importance
         # fpn_masks: F list[B, 1, T_i] -> F List[B, T_i]
         fpn_masks = [x.squeeze(1) for x in fpn_masks]
 
@@ -815,11 +813,7 @@ class PtTransformer(nn.Module):
             reg_loss *= (normal_probs_reg_left[pos_mask] + normal_probs_reg_right[pos_mask]) / 2.0
             reg_loss *= normal_probs_cls[pos_mask]              # for one gaussian
             
-            # if self.frm_imp_head.importance_head.conv.weight.requires_grad:
-            #     cur_imp = gt_importances.clone()
-            #     reg_loss += cur_imp
-                # out_importances[~pos_mask] = 1.0
-                # reg_loss *= out_importances[pos_mask]
+
             reg_loss = reg_loss.sum()
             reg_loss /= self.loss_normalizer
         if self.train_loss_weight > 0:
@@ -830,8 +824,7 @@ class PtTransformer(nn.Module):
         # return a dict of losses
         # final_loss = cls_loss + reg_loss * loss_weight
         final_loss = cls_loss + reg_loss * loss_weight + al_loss * self.al_loss_weight
-        # if self.frm_imp_head.importance_head.conv.weight.requires_grad:
-        #     final_loss += imp_loss
+
         return {'cls_loss'   : cls_loss,
                 'reg_loss'   : reg_loss,
                 'al_loss'    : al_loss,
