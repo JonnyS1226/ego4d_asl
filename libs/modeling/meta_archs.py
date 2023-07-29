@@ -772,19 +772,6 @@ class PtTransformer(nn.Module):
         gt_target += self.train_label_smoothing / (self.num_classes + 1)
 
         # calculate iou and cls score
-        # pred_importances = out_importances[pos_mask]     # [numpos]
-        # ious = calc_ious(pred_offsets, gt_offsets) # [numpos, 1]
-        # cls_scores = calc_cls_scores(torch.cat(out_cls_logits, dim=1)[pos_mask], gt_cls[pos_mask]) # [numpos, 1]
-        # self.alpha = 0.2
-        # gt_importances = torch.pow(torch.sigmoid(cls_scores), self.alpha) * torch.pow(ious, 1-self.alpha)      # [numpos]
-        # calc importance loss
-        # imp_loss = F.binary_cross_entropy_with_logits(
-        #             pred_importances,
-        #             gt_importances,
-        #             reduction='sum'
-        #         )
-        # imp_loss /= self.loss_normalizer
-        # imp_loss = l2_loss(pred_importances, gt_importances)
 
         # focal loss
         cls_loss = sigmoid_focal_loss(
@@ -796,13 +783,6 @@ class PtTransformer(nn.Module):
         normal_probs_cls[~pos_mask] = 1.0       # negative weight is 1.0
         cls_loss = cls_loss.sum(-1) # [#pos]
         cls_loss *= normal_probs_cls[valid_mask]
-        # if self.frm_imp_head.importance_head.conv.weight.requires_grad:
-        #     cur_imp = gt_importances.clone()    # [numpos]
-        #     multiplier = torch.zeros_like(out_importances)
-        #     multiplier[pos_mask] = cur_imp
-        #     cls_loss += multiplier[valid_mask]
-            # out_importances[~pos_mask] = 1.0
-            # cls_loss *= out_importances[valid_mask]
         cls_loss = cls_loss.sum()
         cls_loss /= self.loss_normalizer
 
