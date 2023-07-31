@@ -59,7 +59,7 @@ train_cfg: {
 test_cfg: {
   voting_thresh: 0.9,
   pre_nms_topk: 5000,
-  max_seg_num: 4000,
+  max_seg_num: 200,
   min_score: 0.0001,
   multiclass_nms: True,
   nms_sigma: 0.99,
