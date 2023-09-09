@@ -24,7 +24,6 @@ __pycache__/
 submission_final.json 
 submission.json
 /ensemble_model
-infer_ensemble.py
 /configs/cvprw
 /configs/iccv23
 /configs/tc_dev
