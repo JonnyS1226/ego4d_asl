@@ -69,11 +69,13 @@ Our model are based on [Actionformer](https://github.com/happyharrycn/actionform
   year={2023}
 }
 
-@article{shao2023action,
-  title={Action Sensitivity Learning for Temporal Action Localization},
-  author={Shao, Jiayi and Wang, Xiaohan and Quan, Ruijie and Zheng, Junjun and Yang, Jiang and Yang, Yi},
-  journal={arXiv preprint arXiv:2305.15701},
-  year={2023}
+@InProceedings{Shao_2023_ICCV,
+    author    = {Shao, Jiayi and Wang, Xiaohan and Quan, Ruijie and Zheng, Junjun and Yang, Jiang and Yang, Yi},
+    title     = {Action Sensitivity Learning for Temporal Action Localization},
+    booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+    month     = {October},
+    year      = {2023},
+    pages     = {13457-13469}
 }
 
 ```
